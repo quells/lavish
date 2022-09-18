@@ -50,11 +50,11 @@ func (f LoaderFunc) Load(vm *goja.Runtime) error {
 }
 
 func ComponentJSX(name, source string, options api.TransformOptions) Loader {
-	program, compileError := CompileJSX(name, source, options)
+	program, compileErr := CompileJSX(name, source, options)
 
 	return LoaderFunc(func(vm *goja.Runtime) (err error) {
-		if compileError != nil {
-			return fmt.Errorf("failed to compile component %q: %w", name, err)
+		if compileErr != nil {
+			return fmt.Errorf("failed to compile component %q: %w", name, compileErr)
 		}
 
 		if _, err = vm.RunProgram(program); err != nil {
