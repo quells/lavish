@@ -15,6 +15,8 @@ const expect = `<html lang="en">` +
 	`<title>Preact Example</title>` +
 	`</head>` +
 	`<body>` +
+	`<h1>Example</h1>` +
+	`<h4>for Preact 10</h4>` +
 	`<ul>` +
 	`<li>Hello</li>` +
 	`<li>from</li>` +
