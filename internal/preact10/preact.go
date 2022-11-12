@@ -32,15 +32,15 @@ func (_ RenderEngine) Load(vm *goja.Runtime) error {
 func (_ RenderEngine) GetJSXOptions() api.TransformOptions {
 	return api.TransformOptions{
 		Loader:      api.LoaderJSX,
-		JSXFactory:  "_h",
-		JSXFragment: "_Fragment",
+		JSXFactory:  "h",
+		JSXFragment: "Fragment",
 	}
 }
 
 func (_ RenderEngine) GetRenderFunction(vm *goja.Runtime) (goja.Callable, error) {
-	render, ok := goja.AssertFunction(vm.Get("_render"))
+	render, ok := goja.AssertFunction(vm.Get("_preact10_render"))
 	if !ok {
-		return nil, fmt.Errorf("failed to find preact10 _render function in global scope")
+		return nil, fmt.Errorf("failed to find _preact10_render function in global scope")
 	}
 	return render, nil
 }

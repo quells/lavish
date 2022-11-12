@@ -1,3 +1,10 @@
+const Header = () => (
+    <Fragment>
+        <h1>Example</h1>
+        <h4>for Preact 10</h4>
+    </Fragment>
+);
+
 const Item = ({ message }) => (
     <li>{message}</li>
 );
@@ -16,6 +23,7 @@ const { Items } = data;
 
 render(
     <App>
+        <Header />
         <List items={Items} />
     </App>
 )
