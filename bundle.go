@@ -92,7 +92,8 @@ func (b Bundle) Render(program *goja.Program, data any) (rendered string, err er
 		return
 	}
 	if renderErr != nil {
-		err = fmt.Errorf("failed to call render function %q: %w", b.renderFunction, err)
+		err = fmt.Errorf("failed to call render function %q: %w", b.renderFunction, renderErr)
+		return
 	}
 
 	rendered = buf.String()
