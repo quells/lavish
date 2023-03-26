@@ -2,17 +2,45 @@ package lavish
 
 import (
 	"fmt"
+	"strings"
+
 	"github.com/dop251/goja"
 	"github.com/evanw/esbuild/pkg/api"
 )
 
 type TransformError struct {
+	Name     string
 	Errors   []api.Message
 	Warnings []api.Message
 }
 
 func (err TransformError) Error() string {
-	return "TODO"
+	b := new(strings.Builder)
+	_, _ = fmt.Fprintf(b, "failed to transform %s: ", err.Name)
+
+	idx := 0
+	for _, e := range err.Errors {
+		if idx > 0 {
+			_, _ = fmt.Fprintf(b, ", ")
+		}
+		if loc := e.Location; loc != nil {
+			_, _ = fmt.Fprintf(b, "[%s %d:%d] ", err.Name, loc.Line, loc.Column)
+		}
+		_, _ = fmt.Fprint(b, e.Text)
+		idx++
+	}
+	for _, w := range err.Warnings {
+		if idx > 0 {
+			_, _ = fmt.Fprintf(b, ", ")
+		}
+		if loc := w.Location; loc != nil {
+			_, _ = fmt.Fprintf(b, "[%s %d:%d] ", err.Name, loc.Line, loc.Column)
+		}
+		_, _ = fmt.Fprint(b, w.Text)
+		idx++
+	}
+
+	return b.String()
 }
 
 // CompileJSX to a goja Program.
@@ -21,14 +49,15 @@ func CompileJSX(name, jsx string, options api.TransformOptions) (program *goja.P
 	transformed := api.Transform(jsx, options)
 	if len(transformed.Errors) > 0 {
 		err = TransformError{
+			Name:     name,
 			Errors:   transformed.Errors,
 			Warnings: transformed.Warnings,
 		}
 		return
 	}
 
-	const notStrict = false
-	program, err = goja.Compile(name, string(transformed.Code), notStrict)
+	const isStrict = false
+	program, err = goja.Compile(name, string(transformed.Code), isStrict)
 	if err != nil {
 		err = fmt.Errorf("failed to compile jsx: %w", err)
 		return
